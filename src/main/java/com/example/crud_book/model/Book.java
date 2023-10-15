@@ -1,7 +1,11 @@
 package com.example.crud_book.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 
@@ -14,6 +18,7 @@ import lombok.*;
 @ToString
 public class Book {
     // Create, update, view,delete
+    @Id@GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
     private String author;

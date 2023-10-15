@@ -1,10 +1,10 @@
 package com.example.crud_book.controller;
-
+import java.util.*;
+import com.example.crud_book.model.Book;
 import com.example.crud_book.repo.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,21 +40,29 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public void addBook() {
-
+    @PostMapping("/addBook")
+    public ResponseEntity<Object> addBook(@RequestBody Book book) {
+        Book bookObj = bookRepo.save(book);
+        return new ResponseEntity<>(bookObj, HttpStatus.OK);
     }
 
-    @PostMapping
-    public void updateBookById() {
+    @PostMapping("/updateBookById/{id}")
+    public ResponseEntity<Object> updateBookById(@PathVariable Long id, @RequestBody Book newBookData) {
+        Optional<Book> oldBookData = bookRepo.findById(id);
 
+        if (oldBookData.isPresent()) {
+            Book updatedBookData = oldBookData.get();
+            updatedBookData.setTitle(newBookData.getTitle());
+            updatedBookData.setAuthor(newBookData.getAuthor());
+            Book bookObj = bookRepo.save(updatedBookData);
+            return new ResponseEntity<>(bookObj, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping
-    public void deleteBookById() {
-
+    @DeleteMapping("/deleteBookById/{id}")
+    public ResponseEntity<Object> deleteBookById(@PathVariable Long id) {
+        bookRepo.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 }
